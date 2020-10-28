@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_map">Google Map</string>
+    <string name="map_marker">Map Marker</string>
+    <string name="loading_lat_lng">Loading position&#8230;</string>
+    <string name="loading_address">Loading address&#8230;</string>
+    <string name="address_not_found">Address not found</string>
+    <string name="search_places_here">Search places here&#8230;</string>
+    <string name="no_result_found">No result found&#8230;</string>
+</resources>
