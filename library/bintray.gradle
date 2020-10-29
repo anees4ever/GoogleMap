@@ -29,7 +29,6 @@ properties.load( new FileInputStream("local.properties"))
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
-
     pkg {
         repo = 'anees4ever'
         name = 'GoogleMap'

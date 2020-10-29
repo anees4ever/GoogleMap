@@ -1,7 +1,6 @@
 package com.anees4ever.googlemap;
 
-import com.anees4ever.googlemap.R;
-import com.anees4ever.dms.DMS;
+import com.anees4ever.dmsedit.DMS;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
