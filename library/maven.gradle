@@ -1,0 +1,40 @@
+group = 'com.anees4ever'
+version = '1.0.2'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId = group
+                artifactId = 'googlemap'
+                version = version
+
+                pom {
+                    name = 'GoogleMap'
+                    description = 'Map picker and address,elevation APIs'
+                    url = 'https://github.com/anees4ever/GoogleMap'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'anees4ever'
+                            name = 'Muhammed Anees C.A'
+                            email = 'anees4ever@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/anees4ever/GoogleMap.git'
+                        developerConnection = 'scm:git:ssh://github.com/anees4ever/GoogleMap.git'
+                        url = 'https://github.com/anees4ever/GoogleMap.git/'
+                    }
+                }
+            }
+        }
+    }
+}
