@@ -1,6 +1,9 @@
 package com.anees4ever.googlemap;
 
 import com.anees4ever.dmsedit.DMS;
+import com.anees4ever.googlemap.api.API_AddressByLocation;
+import com.anees4ever.googlemap.api.API_LocationByPlaceID;
+import com.anees4ever.googlemap.api.API_PlaceSearch;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -43,8 +46,8 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
 	GoogleMap googleMap;
     Location mLocation;
     Address mAddress;
-    List<LocationAddress.PlaceAutocomplete> mAddressList;
-    LocationAddress.AddressSearch mAddressSearch;
+    List<API_PlaceSearch.PlaceAutocomplete> mAddressList;
+    API_PlaceSearch.AddressSearch mAddressSearch;
     private boolean setTextFromSearch= false;
 
 	RelativeLayout rlSearchBar;
@@ -63,6 +66,11 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_googlemap);
+
+        if(!PermissionInterface.validatePermission(context, PermissionInterface.API_MAPVIEW)) {
+            finish();
+            return;
+        }
 
 		getAPIKeys();
         rlSearchBar= (RelativeLayout) findViewById(R.id.rlSearchBar);
@@ -252,8 +260,8 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
             String localtionStr= DMS.parseDDtoDMS(googleMap.getCameraPosition().target.latitude,
                                 googleMap.getCameraPosition().target.longitude);
             tvLatLon.setText(localtionStr);
-            LocationAddress.getAddressFromLocation(this, googleMap.getCameraPosition().target.latitude,
-                    googleMap.getCameraPosition().target.longitude, new LocationAddress.OnAddressListener() {
+            API_AddressByLocation.getAddressFromLocation(this, googleMap.getCameraPosition().target.latitude,
+                    googleMap.getCameraPosition().target.longitude, new API_AddressByLocation.OnAddressListener() {
                 @Override
                 public void onAddressFound(List<Address> addressList) {
                     try {
@@ -290,9 +298,9 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
     //Map Handlers
 
     //Location Handlers
-    private final LocationAddress.OnAddressSearch mAddressSearchListener= new LocationAddress.OnAddressSearch() {
+    private final API_PlaceSearch.OnAddressSearch mAddressSearchListener= new API_PlaceSearch.OnAddressSearch() {
         @Override
-        public void onResult(List<LocationAddress.PlaceAutocomplete> addressList) {
+        public void onResult(List<API_PlaceSearch.PlaceAutocomplete> addressList) {
             try {
                 pbProgress.setVisibility(View.GONE);
                 drawSearchResultEx(addressList);
@@ -328,14 +336,14 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
             } else {
                 llSearchResults.removeAllViews();
                 pbProgress.setVisibility(View.VISIBLE);
-                mAddressSearch = new LocationAddress.AddressSearch(this, GMAP_API_KEY_APP, mAddressSearchListener);
+                mAddressSearch = new API_PlaceSearch.AddressSearch(this, GMAP_API_KEY_APP, mAddressSearchListener);
                 mAddressSearch.startSearch(edSearch.getText().toString().trim());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void drawSearchResultEx(List<LocationAddress.PlaceAutocomplete> addressList) {
+    private void drawSearchResultEx(List<API_PlaceSearch.PlaceAutocomplete> addressList) {
         try {
             mAddressList= new ArrayList<>();
             svSearchResult.setVisibility(View.VISIBLE);
@@ -352,7 +360,7 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
             e.printStackTrace();
         }
     }
-    private void drawAddress(LocationAddress.PlaceAutocomplete placeAutocomplete, int position) {
+    private void drawAddress(API_PlaceSearch.PlaceAutocomplete placeAutocomplete, int position) {
         try {
             View view= getLayoutInflater().inflate(R.layout.activity_googlemap_search_item, null);
             TextView tvTitle= (TextView) view.findViewById(R.id.tvTitle);
@@ -392,16 +400,27 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
                 bAllowChanges= true;
                 svSearchResult.setVisibility(View.GONE);
                 pbProgress.setVisibility(View.VISIBLE);
-                LocationAddress.PlaceLatLngFinder placeLatLngFinder= new LocationAddress.PlaceLatLngFinder(Activity_GoogleMap.this,
-                        GMAP_API_KEY_APP, latlng -> {
-                    try {
-                        pbProgress.setVisibility(View.GONE);
-                        if (latlng != null) {
-                            setTextFromSearch= true;
-                            setLocation(latlng);
+                API_LocationByPlaceID.PlaceLatLngFinder placeLatLngFinder= new API_LocationByPlaceID.PlaceLatLngFinder(Activity_GoogleMap.this,
+                        GMAP_API_KEY_APP, new API_LocationByPlaceID.OnPlaceLatLngListener() {
+                    @Override
+                    public void onResult(LatLng latlng) {
+                        try {
+                            pbProgress.setVisibility(View.GONE);
+                            if (latlng != null) {
+                                setTextFromSearch= true;
+                                setLocation(latlng);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                        try {
+                            pbProgress.setVisibility(View.GONE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 placeLatLngFinder.find(mAddressList.get(mPosition).placeId);
@@ -449,16 +468,6 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
     }
     public void onClickClearSearch(View view) {
         try {
-//            int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-//            try {
-//                Intent intent =
-//                        new
-//                                PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-//                                .build(this);
-//                startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-//            } catch (GooglePlayServicesRepairableException e) {
-//            } catch (GooglePlayServicesNotAvailableException e) {
-//            }
             if(mAddressSearch!=null) {
                 mAddressSearch.abort();
             }

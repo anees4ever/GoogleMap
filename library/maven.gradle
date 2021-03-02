@@ -1,7 +1,7 @@
 ext {
     repoGroup = 'com.anees4ever'
-    libVersion = '1.0.4'
-    libVersionCode = 4
+    libVersion = '1.0.5'
+    libVersionCode = 5
 }
 
 group = repoGroup
@@ -44,3 +44,4 @@ afterEvaluate {
         }
     }
 }
+//gradlew publishToMavenLocal
