@@ -1,7 +1,7 @@
 ext {
     repoGroup = 'com.anees4ever'
-    libVersion = '1.0.3'
-    libVersionCode = 3
+    libVersion = '1.0.4'
+    libVersionCode = 4
 }
 
 group = repoGroup

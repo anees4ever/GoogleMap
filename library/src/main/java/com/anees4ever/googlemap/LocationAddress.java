@@ -152,9 +152,11 @@ public class LocationAddress {
         void onResult(double altitude);
     }
     public static boolean findAltitude(String apiKey, double lat, double lng, OnAltitudeListener mListener) {
+        return findAltitude(String.format(MAP_GEOCODER_ELEVATION_URL, "" + lat, "" + lng, apiKey), mListener);
+    }
+    public static boolean findAltitude(String url, OnAltitudeListener mListener) {
         try {
-            String sUrl= String.format(MAP_GEOCODER_ELEVATION_URL, "" + lat, "" + lng, apiKey);
-            RetrofitCalls.getJSON(sUrl, (status, object) -> {
+            RetrofitCalls.getJSON(url, (status, object) -> {
                 try {
                     if(mListener != null) {
                         if(status && object != null) {
