@@ -20,7 +20,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -150,7 +150,7 @@ public class Activity_GoogleMap extends ActivityEx implements LocationListener, 
 		    bAllowChanges= false;
 		    edSearch.setText(getIntent().getStringExtra("searchfor"));
 		    bAllowChanges= true;
-            rlSearchBar.postDelayed(handlerSearchPlaces, 500);
+            rlSearchBar.postDelayed(handlerSearchPlaces, 1000);
         }
 	}
 
