@@ -4,17 +4,19 @@ apply plugin: 'maven-publish'
 apply from: 'maven.gradle'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 34
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode libVersionCode
         versionName libVersion
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,18 +24,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    dexOptions {
+        jumboMode = true
+    }
     useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation "com.google.android.gms:play-services-maps:16.0.0"
-    implementation "com.google.android.gms:play-services-location:16.0.0"
-    implementation 'com.google.android.libraries.places:places:1.0.0'
+    implementation "com.google.android.gms:play-services-maps:18.2.0"
+    implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation 'com.google.android.libraries.places:places:2.6.0'
     implementation 'com.anees4ever:dmsedit:1.0.0'
+
+    //add multidex support
+    implementation 'com.android.support:multidex:1.0.3'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
