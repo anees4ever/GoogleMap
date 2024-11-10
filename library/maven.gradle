@@ -44,4 +44,7 @@ afterEvaluate {
         }
     }
 }
+
 //gradlew publishToMavenLocal
+//gradlew publish
+
